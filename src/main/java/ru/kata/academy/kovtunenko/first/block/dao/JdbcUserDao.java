@@ -36,7 +36,7 @@ public class JdbcUserDao implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        try(Connection con = Util.getConnection()) {
+        try (Connection con = Util.getConnection()) {
             PreparedStatement st = con.prepareStatement("INSERT INTO users (name, last_name, age) VALUES (?, ?, ?)");
             st.setString(1, name);
             st.setString(2, lastName);
@@ -49,7 +49,7 @@ public class JdbcUserDao implements UserDao {
     }
 
     public void removeUserById(long id) {
-        try(Connection con = Util.getConnection()) {
+        try (Connection con = Util.getConnection()) {
             PreparedStatement st = con.prepareStatement("DELETE FROM users where id = 1");
             st.setLong(1, id);
             st.executeUpdate();
@@ -62,7 +62,7 @@ public class JdbcUserDao implements UserDao {
         try {
             List<User> userList = new ArrayList<>();
 
-            try(Connection con = Util.getConnection()) {
+            try (Connection con = Util.getConnection()) {
                 PreparedStatement st = con.prepareStatement("SELECT id, name, last_name, age FROM users");
                 ResultSet rs = st.executeQuery();
 
@@ -92,7 +92,7 @@ public class JdbcUserDao implements UserDao {
     }
 
     private void executePreparedStatement(String sqlQuery) throws SQLException {
-        try(Connection con = Util.getConnection()) {
+        try (Connection con = Util.getConnection()) {
             PreparedStatement st = con.prepareStatement(sqlQuery);
             st.execute();
         }
