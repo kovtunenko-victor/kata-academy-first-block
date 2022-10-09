@@ -3,6 +3,7 @@ package ru.kata.academy.kovtunenko.first.block;
 import ru.kata.academy.kovtunenko.first.block.service.UserService;
 import ru.kata.academy.kovtunenko.first.block.service.UserServiceImpl;
 
+
 public class Main {
     public static void main(String[] args) {
         String userName;

@@ -6,8 +6,6 @@ import ru.kata.academy.kovtunenko.first.block.model.User;
 import ru.kata.academy.kovtunenko.first.block.service.UserService;
 import ru.kata.academy.kovtunenko.first.block.service.UserServiceImpl;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.List;
 
 public class ApplicationTests {
@@ -16,17 +14,6 @@ public class ApplicationTests {
     private final String testName = "Ivan";
     private final String testLastName = "Ivanov";
     private final byte testAge = 5;
-
-    @Test
-    public void testConnection() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://31.31.199.29:3306/test", "root", "reporter2015");
-        } catch (Exception e) {
-            Assert.fail("При тестировании подключения к БД произошло исключение\n" + e);
-        }
-    }
-
 
     @Test
     public void dropUsersTable() {
