@@ -1,13 +1,13 @@
 package ru.kata.academy.kovtunenko.first.block.service;
 
-import ru.kata.academy.kovtunenko.first.block.dao.JdbcUserDao;
+import ru.kata.academy.kovtunenko.first.block.dao.HibernateUserDao;
 import ru.kata.academy.kovtunenko.first.block.dao.UserDao;
 import ru.kata.academy.kovtunenko.first.block.model.User;
 
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
-    private final UserDao dao = new JdbcUserDao();
+    private final UserDao dao = new HibernateUserDao();
 
     public void createUsersTable() {
         dao.createUsersTable();

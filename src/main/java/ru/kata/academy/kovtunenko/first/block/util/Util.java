@@ -43,6 +43,7 @@ public class Util {
 
             cfg.setProperties(prop);
             cfg.addAnnotatedClass(User.class);
+
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(cfg.getProperties()).build();
             sessionFactory = cfg.buildSessionFactory(serviceRegistry);

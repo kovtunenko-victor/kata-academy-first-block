@@ -21,7 +21,6 @@ public class Main {
         service.saveUser(userName = "Timur", "Husainov", (byte)37);
         System.out.printf("User with name %s inserted into db%s", userName, System.lineSeparator());
 
-
         service.getAllUsers().forEach(System.out::println);
 
         service.cleanUsersTable();

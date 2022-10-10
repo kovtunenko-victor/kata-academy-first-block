@@ -1,7 +1,6 @@
 package ru.kata.academy.kovtunenko.first.block.dao;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import ru.kata.academy.kovtunenko.first.block.model.User;
 import ru.kata.academy.kovtunenko.first.block.util.Util;
 
@@ -26,34 +25,22 @@ public class HibernateUserDao implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        Transaction tran = null;
-
         try (Session session = Util.getOpenSession()) {
-            tran = session.beginTransaction();
+            session.beginTransaction();
             session.save(new User(name, lastName, age));
-            tran.commit();
+            session.getTransaction().commit();
         } catch (Exception ex) {
-            if (tran != null) {
-                tran.rollback();
-            }
-
             LOGGER.log(Level.SEVERE, "Exception when save user", ex);
         }
     }
 
     public void removeUserById(long id) {
-        Transaction tran = null;
-
         try (Session session = Util.getOpenSession()) {
             User user = session.get(User.class, id);
-            tran = session.beginTransaction();
+            session.beginTransaction();
             session.delete(user);
-            tran.commit();
+            session.getTransaction().commit();
         } catch (Exception ex) {
-            if (tran != null) {
-                tran.rollback();
-            }
-
             LOGGER.log(Level.SEVERE, "Exception when remove user by id", ex);
         }
     }
@@ -72,17 +59,11 @@ public class HibernateUserDao implements UserDao {
     }
 
     private void executeSql(String sql) {
-        Transaction tran = null;
-
         try (Session session = Util.getOpenSession()) {
-            tran = session.beginTransaction();
+            session.beginTransaction();
             session.createSQLQuery(sql).executeUpdate();
-            tran.commit();
+            session.getTransaction().commit();
         } catch (Exception ex) {
-            if (tran != null) {
-                tran.rollback();
-            }
-
             LOGGER.log(Level.SEVERE, "Exception when execute native sql [" + sql + "]", ex);
         }
     }
