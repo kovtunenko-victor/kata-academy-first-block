@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -79,7 +80,7 @@ public class JdbcUserDao implements UserDao {
             return userList;
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Exception when remove user by id", ex);
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
     }
 
