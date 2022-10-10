@@ -5,7 +5,6 @@ import ru.kata.academy.kovtunenko.first.block.util.Util;
 
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 import java.util.Collections;
 import java.util.List;
@@ -31,12 +30,13 @@ public class HibernateUserDao implements UserDao {
         EntityManager em = null;
         try {
             em = Util.getEntityManagerFactory().createEntityManager();
-            EntityTransaction tran = em.getTransaction();
-
-            tran.begin();
+            em.getTransaction().begin();
             em.persist(new User(name, lastName, age));
-            tran.commit();
+            em.getTransaction().commit();
         } catch (IllegalStateException | PersistenceException ex) {
+            if(em != null) {
+                em.getTransaction().rollback();
+            }
             LOGGER.log(Level.SEVERE, "Exception when save user", ex);
         } finally {
             if (em != null && em.isOpen()) {
@@ -49,12 +49,13 @@ public class HibernateUserDao implements UserDao {
         EntityManager em = null;
         try {
             em = Util.getEntityManagerFactory().createEntityManager();
-            EntityTransaction tran = em.getTransaction();
-
-            tran.begin();
+            em.getTransaction().begin();
             em.remove(em.find(User.class, id));
-            tran.commit();
+            em.getTransaction().commit();
         } catch (IllegalStateException | PersistenceException ex) {
+            if(em != null) {
+                em.getTransaction().rollback();
+            }
             LOGGER.log(Level.SEVERE, "Exception when remove user by id", ex);
         } finally {
             if (em != null && em.isOpen()) {
@@ -69,7 +70,7 @@ public class HibernateUserDao implements UserDao {
             em = Util.getEntityManagerFactory().createEntityManager();
             return em.createQuery("from User", User.class).getResultList();
         } catch (IllegalStateException | PersistenceException ex) {
-            LOGGER.log(Level.SEVERE, "Exception when remove user by id", ex);
+            LOGGER.log(Level.SEVERE, "Exception when get users list", ex);
             return Collections.emptyList();
         } finally {
             if (em != null && em.isOpen()) {
@@ -86,12 +87,13 @@ public class HibernateUserDao implements UserDao {
         EntityManager em = null;
         try {
             em = Util.getEntityManagerFactory().createEntityManager();
-            EntityTransaction tran = em.getTransaction();
-
-            tran.begin();
+            em.getTransaction().begin();
             em.createNativeQuery(sql).executeUpdate();
-            tran.commit();
+            em.getTransaction().commit();
         } catch (IllegalStateException | PersistenceException ex) {
+            if(em != null) {
+                em.getTransaction().rollback();
+            }
             LOGGER.log(Level.SEVERE, "Exception when execute native sql [" + sql + "]", ex);
         } finally {
             if (em != null && em.isOpen()) {
