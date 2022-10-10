@@ -33,8 +33,8 @@ public class HibernateUserDao implements UserDao {
             em.getTransaction().begin();
             em.persist(new User(name, lastName, age));
             em.getTransaction().commit();
-        } catch (IllegalStateException | PersistenceException ex) {
-            if(em != null) {
+        } catch (IllegalStateException | PersistenceException | IllegalArgumentException ex) {
+            if(em != null && em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
             LOGGER.log(Level.SEVERE, "Exception when save user", ex);
@@ -52,8 +52,8 @@ public class HibernateUserDao implements UserDao {
             em.getTransaction().begin();
             em.remove(em.find(User.class, id));
             em.getTransaction().commit();
-        } catch (IllegalStateException | PersistenceException ex) {
-            if(em != null) {
+        } catch (IllegalStateException | PersistenceException | IllegalArgumentException ex) {
+            if(em != null && em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
             LOGGER.log(Level.SEVERE, "Exception when remove user by id", ex);
@@ -69,7 +69,7 @@ public class HibernateUserDao implements UserDao {
         try {
             em = Util.getEntityManagerFactory().createEntityManager();
             return em.createQuery("from User", User.class).getResultList();
-        } catch (IllegalStateException | PersistenceException ex) {
+        } catch (IllegalStateException | PersistenceException | IllegalArgumentException ex) {
             LOGGER.log(Level.SEVERE, "Exception when get users list", ex);
             return Collections.emptyList();
         } finally {
@@ -83,15 +83,15 @@ public class HibernateUserDao implements UserDao {
         executeNativeQuery("TRUNCATE TABLE users");
     }
 
-    private void executeNativeQuery(String sql) throws IllegalStateException, PersistenceException {
+    private void executeNativeQuery(String sql) {
         EntityManager em = null;
         try {
             em = Util.getEntityManagerFactory().createEntityManager();
             em.getTransaction().begin();
             em.createNativeQuery(sql).executeUpdate();
             em.getTransaction().commit();
-        } catch (IllegalStateException | PersistenceException ex) {
-            if(em != null) {
+        } catch (IllegalStateException | PersistenceException | IllegalArgumentException  ex) {
+            if(em != null && em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
             LOGGER.log(Level.SEVERE, "Exception when execute native sql [" + sql + "]", ex);
