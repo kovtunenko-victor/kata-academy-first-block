@@ -14,10 +14,6 @@ import java.util.logging.Logger;
 public class HibernateUserDao implements UserDao {
     private static final Logger LOGGER = Logger.getLogger(HibernateUserDao.class.getName());
 
-    public HibernateUserDao() {
-
-    }
-
     public void createUsersTable() {
         executeNativeQuery("CREATE TABLE users (id BIGINT NOT NULL AUTO_INCREMENT, name VARCHAR(255), last_name VARCHAR(255), age TINYINT, PRIMARY KEY (id)) AUTO_INCREMENT = 1");
     }

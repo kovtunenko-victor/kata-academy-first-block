@@ -16,10 +16,6 @@ import java.util.logging.Logger;
 public class JdbcUserDao implements UserDao {
     private static final Logger LOGGER = Logger.getLogger(JdbcUserDao.class.getName());
 
-    public JdbcUserDao() {
-
-    }
-
     public void createUsersTable() {
         try {
             executePreparedStatement("CREATE TABLE users (id BIGINT NOT NULL AUTO_INCREMENT, name VARCHAR(30), last_name VARCHAR(30), age TINYINT, PRIMARY KEY (id))");

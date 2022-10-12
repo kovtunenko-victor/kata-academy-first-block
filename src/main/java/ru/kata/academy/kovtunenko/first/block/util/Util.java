@@ -39,16 +39,15 @@ public class Util {
 
 
     public static EntityManagerFactory getEntityManagerFactory() {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-        properties.put("hibernate.connection.url", String.format("jdbc:mysql://%s:%s/%s", SERVER_ADDRESS, SERVER_PORT, DATA_BASE));
-        properties.put("hibernate.connection.username", USER);
-        properties.put("hibernate.connection.password", PASSWORD);
-        properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-        properties.put("hibernate.show-sql", "false");
-        properties.put("hibernate.hbm2ddl.auto", "none");
-
-        if(entityManagerFactory == null) {
+        if (entityManagerFactory == null) {
+            Map<String, String> properties = new HashMap<>();
+            properties.put("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
+            properties.put("hibernate.connection.url", String.format("jdbc:mysql://%s:%s/%s", SERVER_ADDRESS, SERVER_PORT, DATA_BASE));
+            properties.put("hibernate.connection.username", USER);
+            properties.put("hibernate.connection.password", PASSWORD);
+            properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+            properties.put("hibernate.show-sql", "false");
+            properties.put("hibernate.hbm2ddl.auto", "none");
             entityManagerFactory = new HibernatePersistenceProvider().createContainerEntityManagerFactory(getPersistenceUnitInfo(), properties);
         }
 
