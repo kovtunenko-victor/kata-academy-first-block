@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import ru.kata.academy.kovtunenko.first.block.model.User;
 import ru.kata.academy.kovtunenko.first.block.util.Util;
 
+import javax.persistence.PersistenceException;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -11,10 +12,6 @@ import java.util.logging.Logger;
 
 public class HibernateUserDao implements UserDao {
     private static final Logger LOGGER = Logger.getLogger(HibernateUserDao.class.getName());
-
-    public HibernateUserDao() {
-
-    }
 
     public void createUsersTable() {
         executeSql("CREATE TABLE users (id BIGINT NOT NULL AUTO_INCREMENT, name VARCHAR(255), last_name VARCHAR(255), age TINYINT, PRIMARY KEY (id)) AUTO_INCREMENT = 1");
@@ -29,7 +26,7 @@ public class HibernateUserDao implements UserDao {
             session.beginTransaction();
             session.save(new User(name, lastName, age));
             session.getTransaction().commit();
-        } catch (Exception ex) {
+        } catch (IllegalStateException | PersistenceException | IllegalArgumentException ex) {
             LOGGER.log(Level.SEVERE, "Exception when save user", ex);
         }
     }
@@ -40,7 +37,7 @@ public class HibernateUserDao implements UserDao {
             session.beginTransaction();
             session.delete(user);
             session.getTransaction().commit();
-        } catch (Exception ex) {
+        } catch (IllegalStateException | PersistenceException | IllegalArgumentException ex) {
             LOGGER.log(Level.SEVERE, "Exception when remove user by id", ex);
         }
     }
@@ -48,7 +45,7 @@ public class HibernateUserDao implements UserDao {
     public List<User> getAllUsers() {
         try (Session session = Util.getOpenSession()) {
             return session.createQuery("from User", User.class).getResultList();
-        } catch (Exception ex) {
+        } catch (IllegalStateException | PersistenceException | IllegalArgumentException ex) {
             LOGGER.log(Level.SEVERE, "Exception when get users list", ex);
             return Collections.emptyList();
         }
@@ -63,7 +60,7 @@ public class HibernateUserDao implements UserDao {
             session.beginTransaction();
             session.createSQLQuery(sql).executeUpdate();
             session.getTransaction().commit();
-        } catch (Exception ex) {
+        } catch (IllegalStateException | PersistenceException | IllegalArgumentException ex) {
             LOGGER.log(Level.SEVERE, "Exception when execute native sql [" + sql + "]", ex);
         }
     }
