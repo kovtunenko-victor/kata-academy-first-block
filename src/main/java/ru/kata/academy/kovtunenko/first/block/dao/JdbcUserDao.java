@@ -16,10 +16,6 @@ import java.util.logging.Logger;
 public class JdbcUserDao implements UserDao {
     private static final Logger LOGGER = Logger.getLogger(JdbcUserDao.class.getName());
 
-    public JdbcUserDao() {
-
-    }
-
     public void createUsersTable() {
         try {
             executePreparedStatement("CREATE TABLE users (id BIGINT NOT NULL AUTO_INCREMENT, name VARCHAR(30), last_name VARCHAR(30), age TINYINT, PRIMARY KEY (id))");
@@ -37,8 +33,8 @@ public class JdbcUserDao implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        try(Connection con = Util.getConnection()) {
-            PreparedStatement st = con.prepareStatement("INSERT INTO users (name, last_name, age) VALUES (?, ?, ?)");
+        try (Connection con = Util.getConnection();
+             PreparedStatement st = con.prepareStatement("INSERT INTO users (name, last_name, age) VALUES (?, ?, ?)");) {
             st.setString(1, name);
             st.setString(2, lastName);
             st.setByte(3, age);
@@ -50,8 +46,8 @@ public class JdbcUserDao implements UserDao {
     }
 
     public void removeUserById(long id) {
-        try(Connection con = Util.getConnection()) {
-            PreparedStatement st = con.prepareStatement("DELETE FROM users where id = ?");
+        try (Connection con = Util.getConnection();
+             PreparedStatement st = con.prepareStatement("DELETE FROM users where id = ?");) {
             st.setLong(1, id);
             st.executeUpdate();
         } catch (SQLException ex) {
@@ -60,28 +56,26 @@ public class JdbcUserDao implements UserDao {
     }
 
     public List<User> getAllUsers() {
-        try {
-            List<User> userList = new ArrayList<>();
+        List<User> userList = new ArrayList<>();
 
-            try(Connection con = Util.getConnection()) {
-                PreparedStatement st = con.prepareStatement("SELECT id, name, last_name, age FROM users");
-                ResultSet rs = st.executeQuery();
+        try (Connection con = Util.getConnection();
+             PreparedStatement st = con.prepareStatement("SELECT id, name, last_name, age FROM users");) {
+            ResultSet rs = st.executeQuery();
 
-                while (rs.next()) {
-                    User user = new User();
-                    user.setId(rs.getLong("id"));
-                    user.setName(rs.getString("name"));
-                    user.setLastName(rs.getString("last_name"));
-                    user.setAge(rs.getByte("age"));
-                    userList.add(user);
-                }
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getLong("id"));
+                user.setName(rs.getString("name"));
+                user.setLastName(rs.getString("last_name"));
+                user.setAge(rs.getByte("age"));
+                userList.add(user);
             }
-
-            return userList;
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Exception when remove user by id", ex);
             return Collections.emptyList();
         }
+
+        return userList;
     }
 
     public void cleanUsersTable() {
@@ -93,8 +87,8 @@ public class JdbcUserDao implements UserDao {
     }
 
     private void executePreparedStatement(String sqlQuery) throws SQLException {
-        try(Connection con = Util.getConnection()) {
-            PreparedStatement st = con.prepareStatement(sqlQuery);
+        try (Connection con = Util.getConnection();
+             PreparedStatement st = con.prepareStatement(sqlQuery);) {
             st.execute();
         }
     }
